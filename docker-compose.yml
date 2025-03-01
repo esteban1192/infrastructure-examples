@@ -25,6 +25,8 @@ services:
       - jenkins-network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TF_TOKEN_app_terraform_io: <your hcp account token here>
 
 volumes:
   jenkins_home:
