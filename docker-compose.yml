@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  jenkins-controller:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: jenkins-controller
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - jenkins-network
+
+  jenkins-agent:
+    image: jenkins/ssh-agent:latest-jdk21
+    container_name: jenkins-agent
+    restart: unless-stopped
+    depends_on:
+      - jenkins-controller
+    networks:
+      - jenkins-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins-network:
+    driver: bridge
