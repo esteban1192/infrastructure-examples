@@ -1,0 +1,13 @@
+pipeline {
+    agent {
+        docker { image 'hashicorp/terraform:1.11.0' }
+    }
+    stages {
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform --version'
+                sh 'terraform init -backend-config="./state.config"'
+            }
+        }
+    }
+}
