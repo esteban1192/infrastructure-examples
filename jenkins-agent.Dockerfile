@@ -12,8 +12,16 @@ RUN apt update && apt install -y terraform
 # Stage 2: Final Jenkins agent image
 FROM jenkins/ssh-agent:latest-jdk21
 
+RUN apt update && apt install -y docker.io
+
 # Copy Terraform binary from the first stage
 COPY --from=terraform-installer /usr/bin/terraform /usr/bin/terraform
 
 # Verify installation
 RUN terraform --version
+
+COPY jenkins-agent-entrypoint.sh /home/jenkins/entrypoint.sh
+
+RUN chmod +x /home/jenkins/entrypoint.sh
+
+ENTRYPOINT ["/home/jenkins/entrypoint.sh"]
