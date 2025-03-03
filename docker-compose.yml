@@ -18,17 +18,18 @@ services:
   jenkins-agent:
     build:
       context: .
-      dockerfile: jenkins-agent.Dockerfile
+      dockerfile: aws/storage/efs-ec2-simple/jenkins-agent.Dockerfile
     container_name: jenkins-agent
     restart: unless-stopped
     depends_on:
       - jenkins-controller
     networks:
       - jenkins-network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      TF_TOKEN_app_terraform_io: <your hcp account token here>
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    volumes:
+      - ./aws/storage/efs-ec2-simple:/home/jenkins/agent/aws/storage/efs-ec2-simple
 
 volumes:
   jenkins_home:
