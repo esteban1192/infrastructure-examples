@@ -11,5 +11,13 @@ pipeline {
                 '''
             }
         }
+        stage('Terraform Plan') {
+            steps {
+                sh '''
+                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
+                    terraform plan -out=tfplan
+                '''
+            }
+        }
     }
 }
