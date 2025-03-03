@@ -3,10 +3,12 @@ pipeline {
     stages {
         stage('Terraform Init') {
             steps {
-                sh 'terraform --version'
-                sh 'cd /home/jenkins/agent/aws/storage/efs-ec2-simple'
-                sh 'ls'
-                sh 'terraform init'
+                sh '''
+                    terraform --version
+                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
+                    ls
+                    terraform init
+                '''
             }
         }
     }
