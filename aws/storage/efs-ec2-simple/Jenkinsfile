@@ -4,6 +4,8 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 sh 'terraform --version'
+                sh 'cd aws/storage/efs-ec2-simple'
+                sh 'pwd'
             }
         }
     }
