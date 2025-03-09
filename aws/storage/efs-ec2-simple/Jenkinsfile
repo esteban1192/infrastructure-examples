@@ -19,5 +19,13 @@ pipeline {
                 '''
             }
         }
+        stage('Deploy') {
+            steps {
+                sh '''
+                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
+                    terraform apply -auto-approve tfplan
+                '''
+            }
+        }
     }
 }
