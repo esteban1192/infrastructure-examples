@@ -17,4 +17,11 @@ COPY aws/storage/efs-ec2-simple/jenkins-agent-entrypoint.sh /home/jenkins/entryp
 
 RUN chmod +x /home/jenkins/entrypoint.sh
 
+ENV AUTHORIZED_KEYS="/home/jenkins/.ssh/authorized_keys"
+RUN mkdir -p /home/jenkins/.ssh && \
+    touch "$AUTHORIZED_KEYS" && \
+    chmod 600 "$AUTHORIZED_KEYS" && \
+    chown -R jenkins:jenkins /home/jenkins/.ssh && \
+    chmod 700 /home/jenkins/.ssh
+
 ENTRYPOINT ["/home/jenkins/entrypoint.sh"]
