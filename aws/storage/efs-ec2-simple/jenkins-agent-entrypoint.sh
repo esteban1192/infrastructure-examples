@@ -1,7 +1,5 @@
 #!/bin/bash
 
-chown -R jenkins:docker /home/jenkins/agent
-
 if [ -z "$AWS_ACCESS_KEY_ID" ]; then
   echo "Error: AWS_ACCESS_KEY_ID is not set!"
   exit 1
@@ -21,7 +19,7 @@ if [ -f "$KEY_FILE" ]; then
     echo "SSH key already exists. Skipping creation."
 else
     # Generate SSH key pair without passphrase
-    ssh-keygen -f "$KEY_FILE" -N ""
+    ssh-keygen -t ed25519 -f "$KEY_FILE" -N ""
     echo "SSH key pair generated."
 fi
 
@@ -36,11 +34,6 @@ if ! grep -qF "$(cat "$PUB_KEY_FILE")" "$AUTHORIZED_KEYS"; then
 else
     echo "Public key already present in authorized_keys."
 fi
-
-# Set correct permissions
-chmod 600 "$AUTHORIZED_KEYS"
-chmod 700 "/home/jenkins/.ssh"
-chown -R jenkins:jenkins "/home/jenkins/.ssh"
 
 echo "Starting SSHD..."
 exec setup-sshd
