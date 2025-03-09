@@ -33,7 +33,6 @@ resource "aws_efs_mount_target" "mount" {
 
 resource "aws_instance" "ec2_instances" {
   count         = 2
-  ami           = "ami-0c55b159cbfafe1f0" # Replace with your preferred AMI
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.subnet.id
   
