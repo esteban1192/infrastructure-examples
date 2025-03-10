@@ -1,38 +1,14 @@
 resource "aws_iam_role" "instances_role" {
   name = "ssm-instance-role"
 
-  assume_role_policy = <<EOF
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Action": "sts:AssumeRole",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Effect": "Allow"
-      }
-    ]
-  }
-  EOF
+  assume_role_policy = file("ec2-assume-role-policy.json")
 }
 
 resource "aws_iam_policy" "describe_azs" {
   name        = "DescribeAvailabilityZonesPolicy"
   description = "Allows describing availability zones"
 
-  policy = <<EOF
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": "ec2:DescribeAvailabilityZones",
-        "Resource": "*"
-      }
-    ]
-  }
-  EOF
+  policy = file("describe-azs-policy.json")
 }
 
 resource "aws_iam_policy_attachment" "ssm_core" {
