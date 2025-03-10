@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages {
+        stage('Terraform Init') {
+            steps {
+                sh '''
+                    terraform --version
+                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
+                    ls
+                    terraform init
+                '''
+            }
+        }
+        stage('Terraform Destroy') {
+            steps {
+                sh '''
+                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
+                    terraform destroy -auto-approve
+                '''
+            }
+        }
+    }
+}
