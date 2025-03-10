@@ -1,6 +1,6 @@
 resource "aws_security_group" "efs_sg" {
   vpc_id = aws_vpc.main.id
-  
+
   ingress {
     from_port   = 2049
     to_port     = 2049
