@@ -31,10 +31,24 @@ resource "aws_efs_mount_target" "mount" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
+data "aws_ami" "linux_2023" {
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023*"]
+  }
+}
+
 resource "aws_instance" "ec2_instances" {
   count         = 2
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.subnet.id
+  ami = data.aws_ami.linux_2023.id
   
   user_data = <<-EOF
               #!/bin/bash
