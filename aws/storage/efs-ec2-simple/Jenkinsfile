@@ -2,29 +2,30 @@ pipeline {
     agent any
     environment {
         REPO_URL = 'https://github.com/esteban1192/infrastructure-examples.git'
-        WORKDIR = '/home/jenkins/agent/deployments'
+        DEPLOYMENTS_DIR = '/home/jenkins/agent/deployments'
+        PROJECT_PATH = 'aws/storage/efs-ec2-simple'
     }
     stages {
         stage('Clone or Pull Repository') {
             steps {
                 sh '''
-                    if [ -d "$WORKDIR/.git" ]; then
+                    if [ -d "$DEPLOYMENTS_DIR/.git" ]; then
                         echo "Repository exists. Pulling latest changes..."
-                        cd $WORKDIR
+                        cd $DEPLOYMENTS_DIR
                         git pull origin main
                     else
                         echo "Repository does not exist. Cloning..."
-                        mkdir -p $WORKDIR
-                        git clone $REPO_URL $WORKDIR
+                        mkdir -p $DEPLOYMENTS_DIR
+                        git clone $REPO_URL $DEPLOYMENTS_DIR
                     fi
-                    ls -l $WORKDIR
+                    ls -l $DEPLOYMENTS_DIR
                 '''
             }
         }
         stage('Terraform Init') {
             steps {
                 sh '''
-                    cd $WORKDIR
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
                     terraform --version
                     terraform init
                 '''
@@ -33,7 +34,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 sh '''
-                    cd $WORKDIR
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
                     terraform plan -out=tfplan
                 '''
             }
@@ -41,7 +42,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    cd $WORKDIR
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
                     terraform apply -auto-approve tfplan
                 '''
             }
