@@ -1,8 +1,8 @@
 variable "private_subnets" {
   description = "List of private subnets with CIDR blocks and availability zones"
   type = list(object({
-    cidr_block = string
-    availability_zone   = string
+    cidr_block        = string
+    availability_zone = string
   }))
   default = [
     { cidr_block = "10.0.1.0/24", availability_zone = "us-east-1a" },
