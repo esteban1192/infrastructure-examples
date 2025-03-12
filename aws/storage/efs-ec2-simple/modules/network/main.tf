@@ -3,20 +3,20 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  for_each = { for idx, subnet in var.public_subnets : idx => subnet }
+  for_each = { for idx, az in var.availability_zones : idx => az }
 
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = each.value.cidr_block
-  availability_zone       = each.value.availability_zone
+  cidr_block              = each.value.public_subnet.cidr_block
+  availability_zone       = each.value.name
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "private_subnets" {
-  for_each = { for idx, subnet in var.private_subnets : idx => subnet }
+  for_each = { for idx, az in var.availability_zones : idx => az }
 
   vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value.cidr_block
-  availability_zone = each.value.availability_zone
+  cidr_block        = each.value.private_subnet.cidr_block
+  availability_zone = each.value.name
 }
 
 resource "aws_internet_gateway" "gw" {

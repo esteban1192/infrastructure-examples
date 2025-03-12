@@ -1,24 +1,22 @@
-variable "private_subnets" {
-  description = "List of private subnets with CIDR blocks and availability zones"
+variable "availability_zones" {
+  description = "List of availability zones with their associated public and private subnets"
   type = list(object({
-    cidr_block        = string
-    availability_zone = string
+    name           = string
+    private_subnet = object({ cidr_block = string })
+    public_subnet  = object({ cidr_block = string })
   }))
+  
   default = [
-    { cidr_block = "10.0.1.0/24", availability_zone = "us-east-1a" },
-    { cidr_block = "10.0.2.0/24", availability_zone = "us-east-1b" }
-  ]
-}
-
-variable "public_subnets" {
-  description = "List of public subnets with CIDR blocks and availability zones"
-  type = list(object({
-    cidr_block        = string
-    availability_zone = string
-  }))
-  default = [
-    { cidr_block = "10.0.101.0/24", availability_zone = "us-east-1a" },
-    { cidr_block = "10.0.102.0/24", availability_zone = "us-east-1b" }
+    {
+      name           = "us-east-1a"
+      private_subnet = { cidr_block = "10.0.1.0/24" }
+      public_subnet  = { cidr_block = "10.0.101.0/24" }
+    },
+    {
+      name           = "us-east-1b"
+      private_subnet = { cidr_block = "10.0.2.0/24" }
+      public_subnet  = { cidr_block = "10.0.102.0/24" }
+    }
   ]
 }
 
