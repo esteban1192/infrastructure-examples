@@ -54,18 +54,22 @@ resource "aws_nat_gateway" "nat" {
 }
 
 resource "aws_route_table" "private_rt" {
+  for_each = aws_subnet.private_subnets
+
   vpc_id = aws_vpc.main.id
 }
 
 resource "aws_route" "private_nat_gateway" {
-  route_table_id         = aws_route_table.private_rt.id
+  for_each = aws_route_table.private_rt
+
+  route_table_id         = each.value.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat.id
+  nat_gateway_id         = aws_nat_gateway.nat[each.key].id
 }
 
 resource "aws_route_table_association" "private_assoc" {
   for_each = aws_subnet.private_subnets
 
   subnet_id      = each.value.id
-  route_table_id = aws_route_table.private_rt.id
+  route_table_id = aws_route_table.private_rt[each.key].id
 }
