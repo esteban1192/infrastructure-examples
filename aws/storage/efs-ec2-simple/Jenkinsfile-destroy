@@ -1,20 +1,14 @@
 pipeline {
     agent any
+    environment {
+        DEPLOYMENTS_DIR = '/home/jenkins/agent/deployments'
+        PROJECT_PATH = 'aws/storage/efs-ec2-simple'
+    }
     stages {
-        stage('Terraform Init') {
-            steps {
-                sh '''
-                    terraform --version
-                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
-                    ls
-                    terraform init
-                '''
-            }
-        }
         stage('Terraform Destroy') {
             steps {
                 sh '''
-                    cd /home/jenkins/agent/aws/storage/efs-ec2-simple
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
                     terraform destroy -auto-approve
                 '''
             }
