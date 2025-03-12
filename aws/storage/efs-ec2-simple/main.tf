@@ -4,13 +4,13 @@ module "network" {
 
 module "storage" {
   source            = "./modules/storage"
-  subnet_cidr_block = module.network.private_subnet_cidr_block
-  subnet_id         = module.network.private_subnet_id
+  subnet_cidr_blocks = module.network.private_subnet_cidr_blocks
+  subnet_ids        = module.network.private_subnet_ids
   vpc_id            = module.network.vpc_id
 }
 
 module "compute" {
   source    = "./modules/compute"
-  subnet_id = module.network.private_subnet_id
+  subnet_ids = module.network.private_subnet_ids
   efs_id    = module.storage.efs_id
 }

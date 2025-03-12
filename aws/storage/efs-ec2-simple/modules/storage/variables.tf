@@ -3,12 +3,12 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "subnet_cidr_block" {
-  description = "The cidr block of the subnet in which the efs will be located"
-  type        = string
+variable "subnet_cidr_blocks" {
+  description = "The CIDR blocks of the subnets in which the EFS will be located"
+  type        = list(string)
 }
 
-variable "subnet_id" {
-  description = "The ID of the subnet in which the efs will be located"
-  type        = string
+variable "subnet_ids" {
+  description = "The IDs of the subnets in which the EFS will be located"
+  type        = list(string)
 }

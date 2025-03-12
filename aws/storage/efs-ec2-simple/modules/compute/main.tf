@@ -48,16 +48,16 @@ data "aws_ami" "linux_2023" {
 }
 
 resource "aws_instance" "ec2_instances" {
-  count                = var.instances_count
-  instance_type        = var.instances_type
-  subnet_id            = var.subnet_id
-  ami                  = data.aws_ami.linux_2023.id
+  for_each            = { for idx, subnet_id in var.subnet_ids : idx => subnet_id }
+  instance_type       = var.instance_type
+  subnet_id           = each.value
+  ami                 = data.aws_ami.linux_2023.id
   iam_instance_profile = aws_iam_instance_profile.ssm_profile.name
 
   # user_data = file("${path.module}/user-data.sh")
   user_data = templatefile("${path.module}/user-data.sh", { efs_id = var.efs_id })
 
   tags = {
-    Name = "EC2-Instance-${count.index + 1}"
+    Name = "EC2-Instance-${each.value}"
   }
 }
