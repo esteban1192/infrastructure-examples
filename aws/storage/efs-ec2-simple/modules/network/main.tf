@@ -2,9 +2,12 @@ resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr_block
 }
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public_subnets" {
+  for_each = { for idx, subnet in var.public_subnets : idx => subnet }
+
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidr_block
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.availability_zone
   map_public_ip_on_launch = true
 }
 
@@ -31,17 +34,23 @@ resource "aws_route" "public_internet_access" {
 }
 
 resource "aws_route_table_association" "public_assoc" {
-  subnet_id      = aws_subnet.public_subnet.id
+  for_each = aws_subnet.public_subnets
+
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public_rt.id
 }
 
 resource "aws_eip" "nat_eip" {
+  for_each = aws_subnet.public_subnets
+
   domain = "vpc"
 }
 
 resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public_subnet.id
+  for_each = aws_subnet.public_subnets
+
+  allocation_id = aws_eip.nat_eip[each.key].id
+  subnet_id     = each.value.id
 }
 
 resource "aws_route_table" "private_rt" {
