@@ -3,20 +3,20 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  for_each = { for idx, az in var.availability_zones : idx => az }
+  for_each = var.availability_zones
 
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = each.value.public_subnet.cidr_block
-  availability_zone       = each.value.name
+  cidr_block              = each.value.public_subnet_cidr
+  availability_zone       = each.key
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "private_subnets" {
-  for_each = { for idx, az in var.availability_zones : idx => az }
+  for_each = var.availability_zones
 
   vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value.private_subnet.cidr_block
-  availability_zone = each.value.name
+  cidr_block        = each.value.private_subnet_cidr
+  availability_zone = each.key
 }
 
 resource "aws_internet_gateway" "gw" {
@@ -60,9 +60,9 @@ resource "aws_route_table" "private_rt" {
 }
 
 resource "aws_route" "private_nat_gateway" {
-  for_each = aws_route_table.private_rt
+  for_each = aws_subnet.private_subnets
 
-  route_table_id         = each.value.id
+  route_table_id         = aws_route_table.private_rt[each.key].id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.nat[each.key].id
 }
