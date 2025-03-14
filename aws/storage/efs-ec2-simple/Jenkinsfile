@@ -4,6 +4,8 @@ pipeline {
         REPO_URL = 'https://github.com/esteban1192/infrastructure-examples.git'
         DEPLOYMENTS_DIR = '/home/jenkins/agent/deployments'
         PROJECT_PATH = 'aws/storage/efs-ec2-simple'
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
     stages {
         stage('Clone or Pull Repository') {
