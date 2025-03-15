@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    environment {
+        REPO_URL = 'https://github.com/esteban1192/infrastructure-examples.git'
+        DEPLOYMENTS_DIR = '/home/jenkins/agent/deployments'
+        PROJECT_PATH = 'aws/security/waf-sql-injection-protection'
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
+    stages {
+        stage('Clone or Pull Repository') {
+            steps {
+                sh '''
+                    if [ -d "$DEPLOYMENTS_DIR/.git" ]; then
+                        echo "Repository exists. Pulling latest changes..."
+                        cd $DEPLOYMENTS_DIR
+                        git pull origin main
+                    else
+                        echo "Repository does not exist. Cloning..."
+                        mkdir -p $DEPLOYMENTS_DIR
+                        git clone $REPO_URL $DEPLOYMENTS_DIR
+                    fi
+                    ls -l $DEPLOYMENTS_DIR
+                '''
+            }
+        }
+        stage('Terraform Init') {
+            steps {
+                sh '''
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
+                    terraform --version
+                    terraform init
+                '''
+            }
+        }
+        stage('Terraform Plan') {
+            steps {
+                sh '''
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
+                    terraform plan -out=tfplan
+                '''
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh '''
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
+                    terraform apply -auto-approve tfplan
+                '''
+            }
+        }
+    }
+}

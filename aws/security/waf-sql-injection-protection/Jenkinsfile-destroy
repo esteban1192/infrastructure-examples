@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    environment {
+        DEPLOYMENTS_DIR = '/home/jenkins/agent/deployments'
+        PROJECT_PATH = 'aws/security/waf-sql-injection-protection'
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
+    stages {
+        stage('Terraform Destroy') {
+            steps {
+                sh '''
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
+                    terraform destroy -auto-approve
+                '''
+            }
+        }
+    }
+}
