@@ -1,5 +1,5 @@
 module "lambda" {
-  source        = "./modules/lambda-function-module"
+  source        = "./modules/lambda-function"
   function_name = "sql-injection-vulnerable"
 }
 
