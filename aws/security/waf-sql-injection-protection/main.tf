@@ -13,3 +13,8 @@ module "api_gateway" {
   accountId = var.accountId
   region = var.region
 }
+
+module "waf" {
+  source = "./modules/waf"
+  api_stage_arn = module.api_gateway.stage_arn
+}
