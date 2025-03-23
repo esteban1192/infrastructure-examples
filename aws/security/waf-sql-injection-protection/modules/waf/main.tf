@@ -19,31 +19,6 @@ resource "aws_wafv2_web_acl" "api_waf" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesSQLiRuleSet"
         vendor_name = "AWS"
-
-        scope_down_statement {
-          byte_match_statement {
-            field_to_match {
-              json_body {
-                match_scope = "ALL"
-                match_pattern {
-                  all { }
-                }
-              }
-            }
-            positional_constraint = "CONTAINS"
-            search_string         = "SELECT"
-
-            text_transformation {
-              priority = 0
-              type     = "URL_DECODE"
-            }
-
-            text_transformation {
-              priority = 1
-              type     = "LOWERCASE"
-            }
-          }
-        }
       }
     }
 
