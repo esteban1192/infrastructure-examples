@@ -49,5 +49,22 @@ pipeline {
                 '''
             }
         }
+        stage('Redeploy Api Gateway to stage') {
+            steps {
+                sh '''
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH
+                    echo "Exporting Terraform outputs..."
+                    REST_API_ID=$(terraform output -raw rest_api_id)
+                    DEPLOYMENT_ID=$(terraform output -raw deployment_id)
+                    STAGE_NAME=$(terraform output -raw stage_name)
+                    DEPLOYMENT_REGION=$(terraform output -raw deployment_region)
+
+                    aws apigateway create-deployment \
+                        --rest-api-id $REST_API_ID \
+                        --stage-name $STAGE_NAME \
+                        --region $DEPLOYMENT_REGION
+                '''
+            }
+        }
     }
 }
