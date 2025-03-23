@@ -10,4 +10,6 @@ module "api_gateway" {
   lambda_resource_path = "sql-injection"
   lambda_invoke_arn = module.lambda.lambda_function_invoke_arn
   lambda_function_name = module.lambda.lambda_function_name
+  accountId = var.accountId
+  region = var.region
 }
