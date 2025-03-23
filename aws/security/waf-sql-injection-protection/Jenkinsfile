@@ -24,6 +24,16 @@ pipeline {
                 '''
             }
         }
+        stage('Zip Lambda Layer Version') {
+            steps {
+                sh '''
+                    cd $DEPLOYMENTS_DIR/$PROJECT_PATH/modules/lambda-function-module/layer/nodejs
+                    npm install
+                    cd ..
+                    zip -r lambda_layer_payload.zip nodejs
+                '''
+            }
+        }
         stage('Terraform Init') {
             steps {
                 sh '''

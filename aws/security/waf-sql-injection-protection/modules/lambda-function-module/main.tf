@@ -11,6 +11,13 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+resource "aws_lambda_layer_version" "lambda_layer" {
+  filename   = "${path.module}/layer/lambda_layer_payload.zip"
+  layer_name = "sqlite3_layer"
+
+  compatible_runtimes = ["nodejs22.x"]
+}
+
 resource "aws_iam_role" "lambda_role" {
   name               = "lambda_role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json

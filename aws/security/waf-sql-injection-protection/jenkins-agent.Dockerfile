@@ -13,11 +13,15 @@ FROM jenkins/ssh-agent:latest-jdk21
 COPY --from=terraform-installer /usr/bin/unzip /usr/bin/unzip
 COPY --from=terraform-installer /usr/bin/terraform /usr/bin/terraform
 
-RUN apt update && apt install -y curl
+RUN apt update && apt install -y curl zip
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install
+
+# Install Node.js 22
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt install -y nodejs
 
 COPY aws/storage/efs-ec2-simple/jenkins-agent-entrypoint.sh /home/jenkins/entrypoint.sh
 
