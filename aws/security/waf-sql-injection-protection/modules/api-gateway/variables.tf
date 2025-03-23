@@ -17,3 +17,11 @@ variable "lambda_resource_path" {
 variable "lambda_function_name" {
   type = string
 }
+
+variable "region" {
+  type = string
+}
+
+variable "accountId" {
+  type = string
+}

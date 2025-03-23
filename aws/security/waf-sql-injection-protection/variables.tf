@@ -3,3 +3,8 @@ variable "region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "accountId" {
+  description = "The id of the account to deploy resources"
+  type = string
+}
