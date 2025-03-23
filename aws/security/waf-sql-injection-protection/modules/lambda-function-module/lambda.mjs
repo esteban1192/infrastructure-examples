@@ -43,6 +43,7 @@ export const handler = async (event) => {
     const response = await getUser(db, id);
     return { statusCode: 200, body: JSON.stringify(response) };
   } catch (error) {
+    console.error(error);
     return { statusCode: 500, body: JSON.stringify({ error: 'Failed to process the request' }) };
   } finally {
     db.close();
