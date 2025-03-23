@@ -1,22 +1,23 @@
-# Stage 1: Install Terraform and AWS CLI on a Debian-based image
 FROM debian:bookworm AS terraform-installer
 
-RUN apt update && apt install -y wget gpg lsb-release unzip
+RUN apt update && apt install -y wget gpg lsb-release unzip curl
 
-RUN wget -O - https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-
-RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
-
-RUN apt update && apt install -y terraform
-
-RUN wget "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -O "/tmp/awscliv2.zip" \
-    && unzip /tmp/awscliv2.zip -d /tmp \
-    && /tmp/aws/install
+ARG TERRAFORM_VERSION=1.11.0
+RUN wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -O terraform.zip && \
+    unzip terraform.zip && \
+    mv terraform /usr/bin/terraform && \
+    chmod +x /usr/bin/terraform
 
 FROM jenkins/ssh-agent:latest-jdk21
 
+COPY --from=terraform-installer /usr/bin/unzip /usr/bin/unzip
 COPY --from=terraform-installer /usr/bin/terraform /usr/bin/terraform
-COPY --from=terraform-installer /usr/local/bin/aws /usr/local/bin/aws
+
+RUN apt update && apt install -y curl
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install
 
 COPY aws/storage/efs-ec2-simple/jenkins-agent-entrypoint.sh /home/jenkins/entrypoint.sh
 
