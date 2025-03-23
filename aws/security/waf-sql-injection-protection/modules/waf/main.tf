@@ -23,7 +23,12 @@ resource "aws_wafv2_web_acl" "api_waf" {
         scope_down_statement {
           byte_match_statement {
             field_to_match {
-              body {}
+              json_body {
+                match_scope = "ALL"
+                match_pattern {
+                  all { }
+                }
+              }
             }
             positional_constraint = "CONTAINS"
             search_string         = "SELECT"
