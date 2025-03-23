@@ -42,4 +42,6 @@ resource "aws_lambda_function" "lambda" {
   runtime          = "nodejs22.x"
   filename         = "lambda_function.zip"
   source_code_hash = data.archive_file.lambda.output_base64sha256
+
+  layers = [ aws_lambda_layer_version.lambda_layer.arn ]
 }
