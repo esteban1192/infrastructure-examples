@@ -37,7 +37,8 @@ pipeline {
             steps {
                 sh '''
                     cd $DEPLOYMENTS_DIR/$PROJECT_PATH
-                    terraform plan -out=tfplan
+                    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+                    terraform plan -var "accountId=$ACCOUNT_ID" -out=tfplan
                 '''
             }
         }
@@ -45,8 +46,7 @@ pipeline {
             steps {
                 sh '''
                     cd $DEPLOYMENTS_DIR/$PROJECT_PATH
-                    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-                    terraform apply -auto-approve -var "accountId=$ACCOUNT_ID" tfplan
+                    terraform apply -auto-approve tfplan
                 '''
             }
         }
