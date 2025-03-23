@@ -11,24 +11,33 @@ resource "aws_wafv2_web_acl" "api_waf" {
     name     = "SQLInjectionProtection"
     priority = 1
 
-    action {
-      block {}
+    override_action {
+      none {}
     }
 
     statement {
-      sqli_match_statement {
-        field_to_match {
-          all_query_arguments {}
-        }
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesSQLiRuleSet"
+        vendor_name = "AWS"
 
-        text_transformation {
-          priority = 0
-          type     = "URL_DECODE"
-        }
+        scope_down_statement {
+          byte_match_statement {
+            field_to_match {
+              body {}
+            }
+            positional_constraint = "CONTAINS"
+            search_string         = "SELECT"
 
-        text_transformation {
-          priority = 1
-          type     = "LOWERCASE"
+            text_transformation {
+              priority = 0
+              type     = "URL_DECODE"
+            }
+
+            text_transformation {
+              priority = 1
+              type     = "LOWERCASE"
+            }
+          }
         }
       }
     }
