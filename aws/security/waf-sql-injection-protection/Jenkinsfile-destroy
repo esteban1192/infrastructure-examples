@@ -10,8 +10,9 @@ pipeline {
         stage('Terraform Destroy') {
             steps {
                 sh '''
+                    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
                     cd $DEPLOYMENTS_DIR/$PROJECT_PATH
-                    terraform destroy -auto-approve
+                    terraform destroy -var "accountId=$ACCOUNT_ID" -auto-approve -out=tfplan
                 '''
             }
         }
