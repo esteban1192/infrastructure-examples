@@ -45,7 +45,8 @@ pipeline {
             steps {
                 sh '''
                     cd $DEPLOYMENTS_DIR/$PROJECT_PATH
-                    terraform apply -auto-approve tfplan
+                    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+                    terraform apply -auto-approve -var "accountId=$ACCOUNT_ID" tfplan
                 '''
             }
         }
