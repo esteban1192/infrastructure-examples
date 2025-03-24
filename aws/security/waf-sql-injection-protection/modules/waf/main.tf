@@ -20,7 +20,7 @@ resource "aws_wafv2_web_acl" "api_waf" {
         name        = "AWSManagedRulesSQLiRuleSet"
         vendor_name = "AWS"
         rule_action_override {
-          name = "block rule_action_override"
+          name = "block-rule-action-override"
           action_to_use {
             block {}
           }
