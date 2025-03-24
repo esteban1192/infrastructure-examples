@@ -25,6 +25,11 @@ resource "aws_wafv2_web_acl" "api_waf" {
           priority = 1
           type = "LOWERCASE"
         }
+        field_to_match {
+          body {
+            oversize_handling = "MATCH"
+          }
+        }
       }
     }
 
