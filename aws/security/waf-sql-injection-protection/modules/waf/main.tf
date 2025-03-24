@@ -20,6 +20,12 @@ resource "aws_wafv2_web_acl" "api_waf" {
         name        = "AWSManagedRulesSQLiRuleSet"
         vendor_name = "AWS"
       }
+      sqli_match_statement {
+        text_transformation {
+          priority = 1
+          type = "LOWERCASE"
+        }
+      }
     }
 
     visibility_config {
