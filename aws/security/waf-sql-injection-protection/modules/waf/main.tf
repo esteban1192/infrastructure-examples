@@ -11,8 +11,8 @@ resource "aws_wafv2_web_acl" "api_waf" {
     name     = "SQLInjectionProtection"
     priority = 1
 
-    action {
-      block {}
+    override_action {
+      none {}
     }
 
     statement {
