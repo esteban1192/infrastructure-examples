@@ -19,6 +19,12 @@ resource "aws_wafv2_web_acl" "api_waf" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesSQLiRuleSet"
         vendor_name = "AWS"
+        rule_action_override {
+          name = "block rule_action_override"
+          action_to_use {
+            block {}
+          }
+        }
       }
     }
 
