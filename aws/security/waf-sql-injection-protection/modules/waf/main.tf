@@ -11,10 +11,6 @@ resource "aws_wafv2_web_acl" "api_waf" {
     name     = "SQLInjectionProtection"
     priority = 1
 
-    action {
-      block {}
-    }
-
     statement {
       managed_rule_group_statement {
         name        = "AWSManagedRulesSQLiRuleSet"
