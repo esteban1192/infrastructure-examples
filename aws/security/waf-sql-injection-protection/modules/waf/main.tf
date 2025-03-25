@@ -16,13 +16,17 @@ resource "aws_wafv2_web_acl" "api_waf" {
     }
 
     statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesSQLiRuleSet"
-        vendor_name = "AWS"
-        rule_action_override {
-          name = "block-rule-action-override"
-          action_to_use {
-            block {}
+      sqli_match_statement {
+        text_transformation {
+          priority = 1
+          type = "NONE"
+        }
+        field_to_match {
+          json_body {
+            match_pattern {
+              all { }
+            }
+            match_scope = "VALUE"
           }
         }
       }
