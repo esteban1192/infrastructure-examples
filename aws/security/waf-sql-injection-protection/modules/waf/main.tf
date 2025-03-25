@@ -19,11 +19,7 @@ resource "aws_wafv2_web_acl" "api_waf" {
       sqli_match_statement {
         text_transformation {
           priority = 0
-          type     = "URL_DECODE"
-        }
-        text_transformation {
-          priority = 1
-          type     = "LOWERCASE"
+          type     = "NONE"
         }
         field_to_match {
           json_body {
