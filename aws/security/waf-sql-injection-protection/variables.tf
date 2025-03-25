@@ -6,5 +6,5 @@ variable "region" {
 
 variable "accountId" {
   description = "The id of the account to deploy resources"
-  type = string
+  type        = string
 }

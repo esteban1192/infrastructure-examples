@@ -15,5 +15,5 @@ output "stage_name" {
 
 output "stage_arn" {
   description = "arn of the api stage"
-  value = aws_api_gateway_stage.stage.arn
+  value       = aws_api_gateway_stage.stage.arn
 }

@@ -12,23 +12,23 @@ resource "aws_wafv2_web_acl" "api_waf" {
     priority = 1
 
     action {
-      block { }
+      block {}
     }
 
     statement {
       sqli_match_statement {
         text_transformation {
           priority = 0
-          type = "URL_DECODE"
+          type     = "URL_DECODE"
         }
         text_transformation {
           priority = 1
-          type = "LOWERCASE"
+          type     = "LOWERCASE"
         }
         field_to_match {
           json_body {
             match_pattern {
-              all { }
+              all {}
             }
             match_scope = "VALUE"
           }
